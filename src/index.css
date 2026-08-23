@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   3DTopia — shared motion & component layer
+   Every animation here is written to feel "squishy" and hand-crafted:
+   soft overshoot easing, gentle floats, no hard linear motion.
+   ========================================================================== */
+
+:root {
+  --ease-squish: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html { scroll-behavior: smooth; }
+body { cursor: default; }
+
+.shadow-soft-depth { box-shadow: 0 10px 30px rgba(74, 69, 67, 0.08); }
+
+/* ---------- Page-load sequence ---------- */
+.stagger-in {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: stagger-in 0.7s var(--ease-soft) forwards;
+}
+@keyframes stagger-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Scroll reveal ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease-soft), transform 0.7s var(--ease-soft);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Nav ---------- */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -6px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 999px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-squish);
+}
+.nav-link:hover::after,
+.nav-link.active::after { transform: scaleX(1); }
+.nav-link.active { font-weight: 700; }
+
+/* ---------- Buttons ---------- */
+.btn-pill {
+  transition: transform 0.18s var(--ease-squish), box-shadow 0.25s var(--ease-soft), background-color 0.25s ease;
+}
+.btn-pill:hover { box-shadow: 0 10px 24px rgba(136, 76, 93, 0.25); transform: translateY(-2px); }
+.btn-pill:active { transform: scale(0.94) translateY(0); }
+
+.btn-outline {
+  transition: transform 0.18s var(--ease-squish), background-color 0.25s ease, color 0.25s ease;
+}
+.btn-outline:hover { transform: translateY(-2px); }
+.btn-outline:active { transform: scale(0.95); }
+
+/* ---------- Cards ---------- */
+.card-lift {
+  transition: transform 0.35s var(--ease-soft), box-shadow 0.35s var(--ease-soft);
+}
+.card-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(74, 69, 67, 0.14);
+}
+
+.icon-pop { transition: transform 0.4s var(--ease-squish); }
+.card-lift:hover .icon-pop { transform: scale(1.15) rotate(-6deg); }
+
+/* ---------- Filter pills ---------- */
+.filter-pill {
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s var(--ease-squish), border-color 0.25s ease;
+}
+.filter-pill:active { transform: scale(0.94); }
+
+/* ---------- Wave divider float ---------- */
+.wave-divider {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 Q25 20 50 10 T100 10' stroke='%23f0a6b8' fill='none' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  animation: wave-drift 9s linear infinite;
+}
+@keyframes wave-drift {
+  from { background-position-x: 0; }
+  to { background-position-x: 200px; }
+}
+
+/* ---------- Heart-pulse loader (per DESIGN.md) ---------- */
+.heart-pulse {
+  display: inline-block;
+  animation: heart-pulse 1.4s var(--ease-squish) infinite;
+  transform-origin: center;
+}
+@keyframes heart-pulse {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.22); }
+  60% { transform: scale(0.95); }
+}
+
+/* ---------- Blob float (hero collage / ambience) ---------- */
+.float-slow { animation: float-slow 6s ease-in-out infinite; }
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+/* ---------- Sparkle accents ---------- */
+.sparkle {
+  position: absolute;
+  animation: sparkle-twinkle 2.6s ease-in-out infinite;
+}
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.05) rotate(15deg); }
+}
+
+/* ---------- Wishlist heart toggle ---------- */
+.heart-toggle .fill-heart { transition: transform 0.3s var(--ease-squish); }
+.heart-toggle:active .fill-heart { transform: scale(1.4); }
+.heart-toggle.active { color: #CC7A8D; }
+.heart-toggle.active .fill-heart { transform: scale(1.2); }
+
+/* ---------- Form focus glow ---------- */
+.form-field { transition: border-color 0.25s ease, box-shadow 0.25s ease; }
+.form-field:focus {
+  outline: none;
+  border-color: #884c5d;
+  box-shadow: 0 0 0 4px rgba(136, 76, 93, 0.12);
+}
+
+/* ---------- Underline link ---------- */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.3s var(--ease-soft);
+}
+.link-underline:hover { background-size: 100% 1px; }
+
+/* ---------- Illustration placeholders (used in place of stock photography) ---------- */
+.craft-tile { position: relative; overflow: hidden; }
+.craft-tile svg { transition: transform 0.5s var(--ease-soft); }
+.craft-tile:hover svg { transform: scale(1.08) rotate(-3deg); }
+
+/* ---------- Mobile menu collapse ---------- */
+.mobile-menu {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.45s var(--ease-soft);
+}
+.mobile-menu.open { max-height: 480px; }
